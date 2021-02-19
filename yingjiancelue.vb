@@ -523,6 +523,43 @@ Sheets("手机Task").Unprotect ("HWAT")     '工作表解锁
      Sheets("手机Task").Protect Password:="HWAT", AllowFiltering:=True    '工作表锁定
 End Sub
 
-Private Sub OptionButton1_Click()
+
+
+'获取设计性测试结果 
+'打开一个excel;  遍历查找是否包含特定字符串； 
+Private Sub CommandButton8_Click()
+
+ Application.ScreenUpdating = False
+ Sheets("手机Task").Unprotect ("HWAT")     '工作表解锁
+ 
+    Dim wk1 As Workbook, sh1 As Worksheet, wk2 As Workbook, sh2 As Worksheet
+    Dim rowUsed As Integer
+    rowUsed = 699
+    
+    Filename = Application.GetOpenFilename("Excel 文件 (*.xls;*.xlsx),*.xls;*.xlsx")
+    If Filename = False Then
+    Else
+        Workbooks.Open (Filename)
+        Set wk1 = ThisWorkbook
+        Set sh1 = wk1.ActiveSheet
+        Set wk2 = ActiveWorkbook
+        Set sh2 = wk2.Worksheets("测试项目")
+        
+        '清空上次的结果
+        sh1.Range("AI7:AI699").ClearContents
+        
+        For i = ROWHEAD To ROWALL                                            '遍历
+            For j = 2 To rowUsed
+                If InStr(sh2.Cells(j, 2).Text, sh1.Cells(i, 3).Text) <> 0 Then
+                    sh1.Cells(i, 35) = sh2.Cells(j, 6).Text
+                    Exit For
+                End If
+            Next j
+        Next i
+        
+        wk2.Close savechanges:=False
+    End If
+
+     'Sheets("手机Task").Protect Password:="HWAT", AllowFiltering:=True    '工作表锁定
 
 End Sub
